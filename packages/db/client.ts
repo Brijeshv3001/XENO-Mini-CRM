@@ -1,5 +1,4 @@
 import { Pool } from "pg";
-import { Database } from "sqlite3";
 import * as path from "path";
 import * as fs from "fs";
 
@@ -15,7 +14,7 @@ export interface DbInterface {
 }
 
 class SqlitePool implements DbInterface {
-  private db: Database;
+  private db: any;
 
   constructor(filePath: string) {
     const absolutePath = path.isAbsolute(filePath) 
@@ -27,6 +26,7 @@ class SqlitePool implements DbInterface {
       fs.mkdirSync(dir, { recursive: true });
     }
     
+    const { Database } = require("sqlite3");
     this.db = new Database(absolutePath);
     this.initSchema();
   }
@@ -137,7 +137,7 @@ class SqlitePool implements DbInterface {
         )
       `);
 
-      this.db.get("SELECT COUNT(*) as count FROM customers", (err, row: any) => {
+      this.db.get("SELECT COUNT(*) as count FROM customers", (err: any, row: any) => {
         if (!row || row.count === 0) {
           const customers = [
             ["cust_1", "Sriram Iyer", "sriram.iyer@gmail.com", "+919820012345", 12500, 5, 2500, "2026-05-10 14:00:00", "2025-10-01 10:00:00", "2025-10-01 10:00:00", "Mumbai", "Maharashtra", "vip,accessories", 4, 5, 5],
@@ -184,7 +184,7 @@ class SqlitePool implements DbInterface {
   public async query<T = any>(sql: string, params: any[] = []): Promise<{ rows: T[] }> {
     const translatedSql = this.translate(sql);
     return new Promise((resolve, reject) => {
-      this.db.all(translatedSql, params, (err, rows: any[]) => {
+      this.db.all(translatedSql, params, (err: any, rows: any[]) => {
         if (err) {
           console.error(`[SQLite DB Error] SQL: ${translatedSql}`, err);
           return reject(err);
