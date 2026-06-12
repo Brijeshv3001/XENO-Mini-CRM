@@ -84,6 +84,7 @@ class SqlitePool implements DbInterface {
           clicked_count INTEGER NOT NULL DEFAULT 0,
           failed_count INTEGER NOT NULL DEFAULT 0,
           revenue_attributed REAL NOT NULL DEFAULT 0,
+          started_at TEXT,
           created_at TEXT DEFAULT CURRENT_TIMESTAMP
         )
       `);
@@ -333,9 +334,13 @@ async function initPgSchema(pool: Pool) {
         clicked_count INTEGER NOT NULL DEFAULT 0,
         failed_count INTEGER NOT NULL DEFAULT 0,
         revenue_attributed REAL NOT NULL DEFAULT 0,
+        started_at TIMESTAMP,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
+
+    // Safety migrator to add column if table was already created
+    await client.query(`ALTER TABLE campaigns ADD COLUMN IF NOT EXISTS started_at TIMESTAMP`);
 
     await client.query(`
       CREATE TABLE IF NOT EXISTS messages (
