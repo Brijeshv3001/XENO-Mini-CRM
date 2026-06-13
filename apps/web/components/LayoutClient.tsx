@@ -68,7 +68,7 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
 
   // Admin layout
   return (
-    <div className="flex w-full min-h-screen bg-[#0B0F19]">
+    <div className="flex w-full min-h-screen bg-[#F8FAFC]">
       {/* Left Sidebar */}
       <Sidebar
         onToggleAssistant={() => setIsAssistantOpen(!isAssistantOpen)}
@@ -77,7 +77,7 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
       />
 
       {/* Main Content Pane */}
-      <main className="flex-1 flex flex-col min-h-screen overflow-x-hidden bg-[#090D1A]">
+      <main className="flex-1 flex flex-col min-h-screen overflow-x-hidden bg-[#F8FAFC]">
         {children}
       </main>
 
